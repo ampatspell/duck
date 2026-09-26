@@ -1,11 +1,22 @@
 <script lang="ts">
-	import favicon from '#lib/assets/favicon.svg';
+  import { resolve } from '$app/paths';
+  import { validatePrefix } from '@ampatspell/tiny/auth/guard/validate';
+  import Hello from '@ampatspell/tiny/hello/hello';
+  import { setTiny } from '@ampatspell/tiny/hello/tiny';
 
-	let { children } = $props();
+  let { children } = $props();
+
+  setTiny({
+    guard: validatePrefix({
+      prefix: '/_admin',
+      role: 'admin',
+    }),
+    files: {
+      resolve: ({ id, variant }) => resolve('/files/[id]/[variant=variants]', { id, variant }),
+    },
+  });
 </script>
 
-<svelte:head>
-	<link rel="icon" href={favicon} />
-</svelte:head>
-
-{@render children()}
+<Hello>
+  {@render children()}
+</Hello>
